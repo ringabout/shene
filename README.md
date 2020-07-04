@@ -1,7 +1,11 @@
 # shene
-Make an Interface using generics for Nim..
+Make an Interface using generics for Nim.
 
 ## Examples
+
+First method makes normal interface based on function pointers easier to use. It doesn't support inheritence.
+
+Second method makes magic interface based on function pointers and generics. It supports inheritence and makes libraries more extensible.
 
 ### ucalls
 
