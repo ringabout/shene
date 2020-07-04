@@ -42,7 +42,8 @@ proc newCat*(id, cid: int): Must[Animal[Cat], Cat] =
   result.danceImpl = dance
 
 let p = People[Cat](pet: newCat(id = 12, 13))
-echo p.pet.mcall(barkImpl, 13, 14)
-echo p.pet.mget(id)
-echo p.pet.mget(cid)
+echo p.pet.call(barkImpl, 13, 14)
+echo p.pet.id
+echo p.pet.cid
+# echo p.pet.backImpl
 # echo p.pet.mget(backImpl)
