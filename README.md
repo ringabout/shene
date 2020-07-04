@@ -1,6 +1,12 @@
 # shene
 Make an Interface using generics for Nim.
 
+## Installation
+
+```
+nimble install shene
+```
+
 ## Examples
 
 First method makes normal interface based on function pointers easier to use. It doesn't support inheritence.
