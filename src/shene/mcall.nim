@@ -7,29 +7,23 @@ type
     obj: T
 
 
-macro get*(must: Must, attrs: untyped): untyped =
-  result = quote do:
-    when compiles(`must`.class.`attrs`):
-      `must`.class.`attrs`
-    else:
-      `must`.obj.`attrs`
+template get*(must: Must, attrs: untyped): untyped =
+  when compiles(must.class.attrs):
+    must.class.attrs
+  else:
+    must.obj.attrs
 
 template `.`*(must: Must, attrs: untyped): untyped =
   must.get(attrs)
 
-macro put*(must: var Must, call: untyped, fun: untyped) =
-  result = quote do:
-    when compiles(must.class.call):
-      must.class.call = fun
-    else:
-      must.obj.call = fun
-
-template `.=`*(must: var Must, call: untyped, fun: untyped) =
-  #TODO bug can't reuse macros put
+template put*(must: var Must, call: untyped, fun: untyped) =
   when compiles(must.class.call):
     must.class.call = fun
   else:
     must.obj.call = fun
+
+template `.=`*(must: var Must, call: untyped, fun: untyped) {.dirty.} =
+  must.put(call, fun)
 
 macro call*(obj: Must, call: untyped, params: varargs[untyped]): untyped =
   result = newStmtList()
