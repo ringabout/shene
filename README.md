@@ -1,5 +1,5 @@
 # shene
-Make a simple interface for Nim.
+Make an Interface using generics for Nim..
 
 ## Examples
 
