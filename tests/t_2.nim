@@ -51,7 +51,7 @@ echo p.pet.cid
 # echo p.pet.mget(barkImpl)
 
 # type
-#   Dog = object
+#   Dog = ref object
 
 # proc newDog(): Must[Animal[Dog], Dog] =
 #   discard

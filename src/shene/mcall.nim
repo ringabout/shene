@@ -2,7 +2,7 @@ import macros
 
 
 type
-  Must*[U; T: object] {.requiresInit.} = object 
+  Must*[U; T: object | ref object] {.requiresInit.} = object 
     class: U
     obj: T
 
