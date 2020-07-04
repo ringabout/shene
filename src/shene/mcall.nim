@@ -6,8 +6,14 @@ type
     class: U
     obj: T
 
+
+template `.`*(must: Must, attrs: untyped): untyped =
+  must.obj.attrs
+
+
 template `.=`*(must: var Must, call: untyped, fun: untyped) =
-  must.class.call = fun
+  when compiles(must.class.call):
+    must.class.call = fun
   must.obj.call = fun
 
 
