@@ -2,10 +2,13 @@ import macros
 
 
 type
-  Must*[U, T] = object 
+  Must*[U; T: object] = object 
     class: U
     obj: T
 
+
+proc init*[U, T](m: Must[U, T]) =
+  doAssert T is U
 
 template get*(must: Must, attrs: untyped): untyped =
   when compiles(must.class.attrs):

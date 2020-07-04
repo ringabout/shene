@@ -35,6 +35,7 @@ proc dance*(a: Cat, b: string): string =
   result = fmt"{a.id = } |-| {b = }"
 
 proc newCat*(id, cid: int): Must[Animal[Cat], Cat] =
+  init(result)
   result.id = id
   result.cid = cid
   result.sleepImpl = sleep
@@ -48,3 +49,10 @@ echo p.pet.id
 echo p.pet.cid
 # echo p.pet.barkImpl
 # echo p.pet.mget(barkImpl)
+
+# let must = Must[Animal[Dog], Dog]()
+# init(must)
+# let p1 = People[Dog](pet: must)
+# echo p1.pet.call(barkImpl, 13, 14)
+# p1.pet.call(sleepImpl)
+# echo p1.pet.id

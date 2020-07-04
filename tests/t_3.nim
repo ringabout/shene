@@ -52,6 +52,7 @@ proc sleep*(a: Player) =
   discard
 
 proc newCat*(id, cid: int): Must[Animal[Cat], Cat] =
+  init(result)
   result.id = id
   result.cid = cid
   result.sleepImpl = sleep
@@ -59,6 +60,7 @@ proc newCat*(id, cid: int): Must[Animal[Cat], Cat] =
   result.danceImpl = dance
 
 proc newPlayer*(id, pid: int): Must[Gamer[Player], Player] =
+  init(result)
   result.id = id
   result.pid = pid
   result.sleepImpl = sleep

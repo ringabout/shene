@@ -49,6 +49,7 @@ proc dance*(a: Dog, b: string): string =
   discard fmt"{a.id = } |-| {b = }"
 
 proc newCat*(id, cid: int): Must[Animal[Cat], Cat] =
+  init(result)
   result.id = id
   result.cid = cid
   result.sleepImpl = sleep
@@ -56,6 +57,7 @@ proc newCat*(id, cid: int): Must[Animal[Cat], Cat] =
   result.danceImpl = dance
 
 proc newDog*(id, did: int): Must[Animal[Dog], Dog] =
+  init(result)
   result.id = id
   result.did = did
   result.sleepImpl = sleep
