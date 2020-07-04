@@ -2,9 +2,25 @@ import macros
 
 
 type
-  Must*[U; T: object] = object 
+  Must*[U; T: object] {.requiresInit.} = object 
     class: U
     obj: T
+
+
+proc `=sink`*[U, T](dest: var Must[U, T]; source: Must[U, T]) =
+  doAssert T is U
+  dest.class = source.class
+  dest.obj = source.obj
+
+proc `=`*[U, T](dest: var Must[U, T]; source: Must[U, T]) =
+  doAssert T is U
+  dest.class = source.class
+  dest.obj = source.obj
+
+proc `=destroy`[U, T](x: var Must[U, T]) =
+  doAssert T is U
+  `=destroy`(x.class)
+  `=destroy`(x.obj)
 
 
 proc init*[U, T](m: Must[U, T]) =

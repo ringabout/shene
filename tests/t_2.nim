@@ -47,12 +47,17 @@ echo p.pet.call(barkImpl, 13, 14)
 p.pet.call(sleepImpl)
 echo p.pet.id
 echo p.pet.cid
-# echo p.pet.barkImpl
+# discard p.pet.barkImpl
 # echo p.pet.mget(barkImpl)
 
-# let must = Must[Animal[Dog], Dog]()
-# init(must)
-# let p1 = People[Dog](pet: must)
-# echo p1.pet.call(barkImpl, 13, 14)
+# type
+#   Dog = object
+
+# proc newDog(): Must[Animal[Dog], Dog] =
+#   discard
+
+
+# let p1 = People[Dog](pet: newDog())
+# # echo p1.pet.call(barkImpl, 13, 14)
 # p1.pet.call(sleepImpl)
 # echo p1.pet.id
