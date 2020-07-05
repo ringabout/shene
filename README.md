@@ -15,7 +15,7 @@ Second method makes magic interface based on function pointers and generics. It 
 
 ### ucalls
 
-**debug format string needs devel version.**
+Don't support object inheritence.
 
 ```nim
 import strformat, sugar
@@ -88,7 +88,7 @@ nice()
 
 ### mcalls
 
-**debug format string needs devel version.**
+Support extensible object with inheritence or without inheritence.
 
 ```nim
 import shene/mcall
@@ -102,6 +102,7 @@ type
     barkImpl: proc (a: T, b: int, c: int): string {.nimcall, gcsafe.}
     danceImpl: proc (a: T, b: string): string {.nimcall, gcsafe.}
 
+  # support extensible object inheritence
   Cat* = object of Animal[Cat]
     cid: int
 
@@ -134,4 +135,29 @@ echo p.pet.cid
 # a.cid + b + c = 40
 # 12
 # 13
+
+
+type
+  # support extensible object inheritence
+  Dog = object
+    name: string
+
+
+proc bark(d: Dog, b: int, c: int): string =
+  echo "Dog"
+  echo d.name
+
+proc newDog(): Must[Animal[Dog], Dog] =
+  result.name = "OK"
+  result.id = 12
+  result.barkImpl = bark
+
+
+let d = newDog()
+let p1 = People[Dog](pet: d)
+discard p1.pet.call(barkImpl, 13, 14)
+
+doAssertRaises(ImplError):
+  p1.pet.call(sleepImpl)
+echo p1.pet.id
 ```
