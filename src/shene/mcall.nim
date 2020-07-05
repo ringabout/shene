@@ -9,7 +9,7 @@ type
     data: T
 
 
-template must*(a, b: untyped): untyped =
+template must*(a, b: typedesc): untyped =
   Must[a[b], b]
 
 template get*(must: Must, attrs: untyped): untyped =
