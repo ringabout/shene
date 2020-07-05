@@ -1,4 +1,4 @@
-import macros, strformat
+import macros
 
 
 type
@@ -41,7 +41,7 @@ macro call*(obj: Must, call: untyped, params: varargs[untyped]): untyped =
     infixNode = infix(dot, "==", newNilLit())
     raiseNode = newCall(ident"newException",
                         ident"ImplError",
-                        newStrLitNode(fmt"{call.toStrLit} can't be empty!"))
+                        newStrLitNode($call.toStrLit & " can't be empty!"))
 
     raiseStmt = newNimNode(nnkRaiseStmt).add(raiseNode)
     ifStmt = newIfStmt(
