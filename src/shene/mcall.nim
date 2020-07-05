@@ -5,15 +5,12 @@ type
   ImplError* = object of CatchableError
 
   Must*[U; T: object | ref object] {.requiresInit.} = object 
-    class: U
-    obj: T
+    class*: U
+    obj*: T
 
-
-template initSubClass*[U, T](m: Must[U, T]) =
-  doAssert T is U
 
 template get*(must: Must, attrs: untyped): untyped =
-  when compiles(must.class.attrs):
+  when not compiles(must.obj.attrs):
     must.class.attrs
   else:
     must.obj.attrs
@@ -22,7 +19,10 @@ template `.`*(must: Must, attrs: untyped): untyped =
   must.get(attrs)
 
 template put*(must: var Must, call: untyped, fun: untyped) =
-  when compiles(must.class.call):
+  when compiles(must.class.call) and compiles(must.obj.call):
+    must.class.call = fun
+    must.obj.call = fun
+  elif compiles(must.class.call):
     must.class.call = fun
   else:
     must.obj.call = fun
