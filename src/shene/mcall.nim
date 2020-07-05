@@ -9,7 +9,7 @@ type
     obj: T
 
 
-proc initSubClass*[U, T](m: Must[U, T]) =
+template initSubClass*[U, T](m: Must[U, T]) =
   doAssert T is U
 
 template get*(must: Must, attrs: untyped): untyped =
@@ -30,23 +30,14 @@ template put*(must: var Must, call: untyped, fun: untyped) =
 template `.=`*(must: var Must, call: untyped, fun: untyped) {.dirty.} =
   must.put(call, fun)
 
-# macro mcall*(obj: Must, call: untyped, params: varargs[untyped]): untyped =
-#   result = newStmtList()
-#   var tmp = newNimNode(nnkCall)
-#   let dot = newDotExpr(newDotExpr(obj, ident"class"), call)
-#   tmp.add(dot)
-#   tmp.add(newDotExpr(obj, ident"obj"))
-#   for param in params:
-#     tmp.add(param)
-#   result.add tmp
-
-macro mcall*(obj: Must, call: untyped, params: varargs[untyped]): untyped =
+macro call*(obj: Must, call: untyped, params: varargs[untyped]): untyped =
   result = newStmtList()
   var tmp = newNimNode(nnkCall)
 
-  let 
+  let
+    # obj.class.call
     dot = newDotExpr(newDotExpr(obj, ident"class"), call)
-    # if obj.class.call == nil: raise ImplError()
+    # if obj.class.call == nil: raise newException(ImplError, "Impl can't empty!")
     infixNode = infix(dot, "==", newNilLit())
     raiseNode = newCall(ident"newException",
                         ident"ImplError",
@@ -56,7 +47,8 @@ macro mcall*(obj: Must, call: untyped, params: varargs[untyped]): untyped =
     ifStmt = newIfStmt(
               (infixNode, raiseStmt)
               )
-  
+
+  # call obj.class.call(obj.obj, params)
   tmp.add(dot)
   tmp.add(newDotExpr(obj, ident"obj"))
   for param in params:
@@ -64,7 +56,3 @@ macro mcall*(obj: Must, call: untyped, params: varargs[untyped]): untyped =
 
   result.add ifStmt
   result.add tmp
-  
-
-template call*(obj: Must, call: untyped, params: varargs[untyped]): untyped =
-  mcall(obj, call, params)

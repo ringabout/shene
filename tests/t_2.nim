@@ -12,7 +12,7 @@ OK
 
 
 import strformat
-import ../src/shene
+import ../src/shene/mcall
 
 
 type
@@ -56,6 +56,7 @@ let m = newCat(13, 14)
 echo m.call(barkImpl, 12, 87)
 # discard p.pet.barkImpl
 # echo p.pet.mget(barkImpl)
+
 
 type
   Dog = object

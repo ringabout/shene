@@ -16,7 +16,7 @@ a.id + b + c = 178
 """
 
 import strformat, sugar
-import ../src/shene
+import ../src/shene/ucall
 
 
 type

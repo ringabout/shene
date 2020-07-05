@@ -10,7 +10,7 @@ a.cid + b + c = 40
 
 
 import strformat
-import ../src/shene
+import ../src/shene/mcall
 
 
 type

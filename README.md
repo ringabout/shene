@@ -18,7 +18,8 @@ Second method makes magic interface based on function pointers and generics. It 
 **debug format string needs devel version.**
 
 ```nim
-import strformat, sugar, strformat
+import strformat, sugar
+import shene/ucall
 
 
 type
@@ -90,7 +91,7 @@ nice()
 **debug format string needs devel version.**
 
 ```nim
-import shene
+import shene/mcall
 import strformat
 
 
