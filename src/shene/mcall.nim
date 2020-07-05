@@ -10,7 +10,15 @@ type
 
 
 template get*(must: Must, attrs: untyped): untyped =
-  when not compiles(must.obj.attrs):
+  const
+    cond1 = compiles(must.class.attrs)
+    cond2 = compiles(must.obj.attrs)
+  when cond1 and cond2:
+    when (typeof(must.obj.attrs) is proc):
+      must.class.attrs
+    else:
+      must.obj.attrs
+  elif cond1:
     must.class.attrs
   else:
     must.obj.attrs
@@ -19,12 +27,15 @@ template `.`*(must: Must, attrs: untyped): untyped =
   must.get(attrs)
 
 template put*(must: var Must, call: untyped, fun: untyped) =
-  when compiles(must.class.call) and compiles(must.obj.call):
+  const
+    cond1 = compiles(must.class.call)
+    cond2 = compiles(must.obj.call)
+  when cond1 and cond2:
     when (typeof(must.obj.call) is proc):
       must.class.call = fun
     else:
       must.obj.call = fun
-  elif compiles(must.class.call):
+  elif cond1:
     must.class.call = fun
   else:
     must.obj.call = fun
