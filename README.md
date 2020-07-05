@@ -42,7 +42,7 @@ type
     id: string
     did: int
     name: string
-    
+
 
 proc bark(d: var Dog, b: int, c: int): string =
   doAssert d.name == "OK"
@@ -50,7 +50,8 @@ proc bark(d: var Dog, b: int, c: int): string =
   doAssert d.did == 777
   d.id = "First"
   doAssert d.id == "First"
-  
+
+# must(Impl class, Data class)
 proc newDog(): must(Animal, Dog) =
   result.name = "OK"
   result.did = 12
@@ -65,7 +66,6 @@ proc newDog(): must(Animal, Dog) =
 type
   People*[T] = object
     pet: Must[Animal[T], T]
-    other: Must[Others[T], T]
 ```
 
 
