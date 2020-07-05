@@ -65,7 +65,7 @@ proc newDog(): must(Animal, Dog) =
 ```nim
 type
   People*[T] = object
-    pet: Must[Animal[T], T]
+    pet: must(Animal, T)
 ```
 
 
@@ -180,7 +180,7 @@ type
     cid: int
 
   People*[T] = object
-    pet: Must[Animal[T], T]
+    pet: must(Animal, T)
 
 
 proc sleep*(a: Cat) =

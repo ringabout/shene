@@ -31,8 +31,8 @@ type
 
   People*[T, U] = object
     id: int
-    pet: Must[Animal[T], T]
-    gamer: Must[Gamer[U], U]
+    pet: must(Animal, T)
+    gamer: must(Gamer, U)
 
 
 proc sleep*(a: Cat) =

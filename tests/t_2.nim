@@ -26,8 +26,8 @@ type
     clearImpl: proc (a: var T) {.nimcall, gcsafe.}
 
   People*[T] = object
-    pet: Must[Animal[T], T]
-    other: Must[Others[T], T]
+    pet: must(Animal, T)
+    other: must(Others, T)
 
 
 proc sleep*(a: Cat) =
@@ -80,12 +80,12 @@ proc clear(m: var Monkey) =
   m.id = 0
   m.mid = 0
 
-proc newDog(): Must[Animal[Dog], Dog] =
+proc newDog(): must(Animal, Dog) =
   result.name = "OK"
   result.did = 12
   result.barkImpl = bark
 
-proc newMonkey(): Must[Others[Monkey], Monkey] =
+proc newMonkey(): must(Others, Monkey) =
   result.id = 12
   result.mid = 777
   result.clearImpl = clear

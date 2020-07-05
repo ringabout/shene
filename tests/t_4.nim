@@ -26,8 +26,8 @@ type
     did: int
 
   People*[T, U] = object
-    pet0: Must[Animal[T], T]
-    pet1: Must[Animal[U], U]
+    pet0: must(Animal, T)
+    pet1: must(Animal, U)
 
 
 proc sleep*(a: Cat) =
