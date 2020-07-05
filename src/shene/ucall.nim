@@ -9,4 +9,3 @@ macro ucall*(obj: typed, call: untyped, params: varargs[untyped]): untyped =
   for param in params:
     tmp.add(param)
   result.add tmp
-  echo result.repr
