@@ -11,7 +11,7 @@ nimble install shene
 
 First method makes normal interface based on function pointers easier to use. It doesn't support inheritence.
 
-Second method makes magic interface based on function pointers and generics. It supports inheritence and makes libraries more extensible.
+Second method makes magic interface based on function pointers and generics. It supports inheritence or plain object and makes libraries more extensible.
 
 ### ucalls
 
