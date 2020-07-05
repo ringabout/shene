@@ -50,14 +50,14 @@ proc sleep*(a: Gamer) =
 proc sleep*(a: Player) =
   discard
 
-proc newCat*(id, cid: int): Must[Animal[Cat], Cat] =
+proc newCat*(id, cid: int): must(Animal, Cat) =
   result.id = id
   result.cid = cid
   result.sleepImpl = sleep
   result.barkImpl = bark
   result.danceImpl = dance
 
-proc newPlayer*(id, pid: int): Must[Gamer[Player], Player] =
+proc newPlayer*(id, pid: int): must(Gamer, Player) =
   result.id = id
   result.pid = pid
   result.sleepImpl = sleep

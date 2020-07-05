@@ -39,7 +39,7 @@ proc bark*(a: var Cat, b: int, c: int): string =
 proc dance*(a: Cat, b: string): string =
   result = fmt"{a.id = } |-| {b = }"
 
-proc newCat*(id, cid: int): Must[Animal[Cat], Cat] =
+proc newCat*(id, cid: int): must(Animal, Cat) =
   result.id = id
   result.cid = cid
   result.sleepImpl = sleep

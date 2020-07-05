@@ -51,7 +51,7 @@ proc bark(d: var Dog, b: int, c: int): string =
   d.id = "First"
   doAssert d.id == "First"
   
-proc newDog(): Must[Animal[Dog], Dog] =
+proc newDog(): must(Animal, Dog) =
   result.name = "OK"
   result.did = 12
   result.barkImpl = bark
@@ -192,7 +192,7 @@ proc bark*(a: Cat, b: int, c: int): string =
 proc dance*(a: Cat, b: string): string =
   result = fmt"{a.id = } |-| {b = }"
 
-proc newCat*(id, cid: int): Must[Animal[Cat], Cat] =
+proc newCat*(id, cid: int): must(Animal, Cat) =
   result.id = id
   result.cid = cid
   result.sleepImpl = sleep
@@ -220,7 +220,7 @@ proc bark(d: Dog, b: int, c: int): string =
   echo "Dog"
   echo d.name
 
-proc newDog(): Must[Animal[Dog], Dog] =
+proc newDog(): must(Animal, Dog) =
   result.name = "OK"
   result.id = 12
   result.barkImpl = bark

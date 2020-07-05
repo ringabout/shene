@@ -49,14 +49,14 @@ proc bark*(a: Dog, b: int, c: int): string =
 proc dance*(a: Dog, b: string): string =
   discard fmt"{a.id = } |-| {b = }"
 
-proc newCat*(id, cid: int): Must[Animal[Cat], Cat] =
+proc newCat*(id, cid: int): must(Animal, Cat) =
   result.id = id
   result.cid = cid
   result.sleepImpl = sleep
   result.barkImpl = bark
   result.danceImpl = dance
 
-proc newDog*(id, did: int): Must[Animal[Dog], Dog] =
+proc newDog*(id, did: int): must(Animal, Dog) =
   result.id = id
   result.did = did
   result.sleepImpl = sleep
