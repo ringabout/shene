@@ -118,7 +118,6 @@ proc dance*(a: Cat, b: string): string =
   result = fmt"{a.id = } |-| {b = }"
 
 proc newCat*(id, cid: int): Must[Animal[Cat], Cat] =
-  init(result)
   result.id = id
   result.cid = cid
   result.sleepImpl = sleep

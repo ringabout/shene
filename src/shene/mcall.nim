@@ -1,29 +1,15 @@
-import macros
+import macros, strformat
 
 
 type
+  ImplError* = object of CatchableError
+
   Must*[U; T: object | ref object] {.requiresInit.} = object 
     class: U
     obj: T
 
 
-proc `=sink`*[U, T](dest: var Must[U, T]; source: Must[U, T]) =
-  doAssert T is U
-  dest.class = source.class
-  dest.obj = source.obj
-
-proc `=`*[U, T](dest: var Must[U, T]; source: Must[U, T]) =
-  doAssert T is U
-  dest.class = source.class
-  dest.obj = source.obj
-
-proc `=destroy`[U, T](x: var Must[U, T]) =
-  doAssert T is U
-  `=destroy`(x.class)
-  `=destroy`(x.obj)
-
-
-proc init*[U, T](m: Must[U, T]) =
+proc initSubClass*[U, T](m: Must[U, T]) =
   doAssert T is U
 
 template get*(must: Must, attrs: untyped): untyped =
@@ -44,12 +30,41 @@ template put*(must: var Must, call: untyped, fun: untyped) =
 template `.=`*(must: var Must, call: untyped, fun: untyped) {.dirty.} =
   must.put(call, fun)
 
-macro call*(obj: Must, call: untyped, params: varargs[untyped]): untyped =
+# macro mcall*(obj: Must, call: untyped, params: varargs[untyped]): untyped =
+#   result = newStmtList()
+#   var tmp = newNimNode(nnkCall)
+#   let dot = newDotExpr(newDotExpr(obj, ident"class"), call)
+#   tmp.add(dot)
+#   tmp.add(newDotExpr(obj, ident"obj"))
+#   for param in params:
+#     tmp.add(param)
+#   result.add tmp
+
+macro mcall*(obj: Must, call: untyped, params: varargs[untyped]): untyped =
   result = newStmtList()
   var tmp = newNimNode(nnkCall)
-  let dot = newDotExpr(newDotExpr(obj, ident"class"), call)
+
+  let 
+    dot = newDotExpr(newDotExpr(obj, ident"class"), call)
+    # if obj.class.call == nil: raise ImplError()
+    infixNode = infix(dot, "==", newNilLit())
+    raiseNode = newCall(ident"newException",
+                        ident"ImplError",
+                        newStrLitNode(fmt"{call.toStrLit} can't be empty!"))
+
+    raiseStmt = newNimNode(nnkRaiseStmt).add(raiseNode)
+    ifStmt = newIfStmt(
+              (infixNode, raiseStmt)
+              )
+  
   tmp.add(dot)
   tmp.add(newDotExpr(obj, ident"obj"))
   for param in params:
     tmp.add(param)
+
+  result.add ifStmt
   result.add tmp
+  
+
+template call*(obj: Must, call: untyped, params: varargs[untyped]): untyped =
+  mcall(obj, call, params)
