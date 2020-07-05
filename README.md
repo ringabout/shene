@@ -7,6 +7,79 @@ Make an Interface using generics for Nim.
 nimble install shene
 ```
 
+## Ideas
+
+### Decouple `impl` and `data`
+
+`Impl` represents `Impl Class` and `data` stands for `Data Class`.  `Impl Class` supplies all interfaces which should be satisfied. It shouldn’t be inherited. `Data Class` supplies all attributes that can be extended by users. It supports inheritance.
+
+```nim
+type
+  Must*[U; T: object | ref object] = object 
+    impl: U
+    data: T
+```
+
+
+
+#### Impl Class
+
+```nim
+type
+  Animal*[T] = object of RootObj
+    sleepImpl: proc (a: T) {.nimcall, gcsafe.}
+    barkImpl: proc (a: var T, b: int, c: int): string {.nimcall, gcsafe.}
+    danceImpl: proc (a: T, b: string): string {.nimcall, gcsafe.}
+```
+
+
+
+#### Data Class
+
+```nim
+type
+  Dog = object
+    id: string
+    did: int
+    name: string
+    
+
+proc bark(d: var Dog, b: int, c: int): string =
+  doAssert d.name == "OK"
+  d.did = 777
+  doAssert d.did == 777
+  d.id = "First"
+  doAssert d.id == "First"
+  
+proc newDog(): Must[Animal[Dog], Dog] =
+  result.name = "OK"
+  result.did = 12
+  result.barkImpl = bark
+```
+
+
+
+#### Oriented-User Class
+
+```nim
+type
+  People*[T] = object
+    pet: Must[Animal[T], T]
+    other: Must[Others[T], T]
+```
+
+
+
+#### Usage
+
+```nim
+var d = newDog()
+var p1 = People[Dog](pet: d)
+discard p1.pet.call(barkImpl, 13, 14)
+```
+
+
+
 ## Examples
 
 First method makes normal interface based on function pointers easier to use. It doesn't support inheritence.
