@@ -1,13 +1,12 @@
 discard """
-output: '''
-a.cid + b + c = 40
-12
-13
-34
-2333
-'''
+  cmd:      "nim c -r --styleCheck:hint --panics:on $options $file"
+  matrix:   "--gc:refc; --gc:arc"
+  targets:  "c"
+  nimout:   ""
+  action:   "run"
+  exitcode: 0
+  timeout:  60.0
 """
-
 
 import strformat
 import ../src/shene/mcall
@@ -66,12 +65,12 @@ proc newPlayer*(id, pid: int): Must[Gamer[Player], Player] =
 
 let p = People[Cat, Player](id: 2333, pet: newCat(id = 12, 13),
                             gamer: newPlayer(12, 34))
-echo p.pet.call(barkImpl, 13, 14)
+doAssert p.pet.call(barkImpl, 13, 14) == "a.cid + b + c = 40"
 p.pet.call(sleepImpl)
-echo p.pet.id
-echo p.pet.cid
+doAssert p.pet.id == 12
+doAssert p.pet.cid == 13
 p.gamer.call(sleepImpl)
-echo p.gamer.pid
-echo p.id
+doAssert p.gamer.pid == 34
+doAssert p.id == 2333
 # echo p.pet.barkImpl
 # echo p.pet.mget(barkImpl)

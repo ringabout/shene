@@ -1,16 +1,12 @@
 discard """
-output: '''
-a.cid + b + c = 40
-12
-13
-a.cid + b + c = 113
-Dog
-OK
-777
-777
-'''
+  cmd:      "nim c -r --styleCheck:hint --panics:on $options $file"
+  matrix:   "--gc:refc; --gc:arc"
+  targets:  "c"
+  nimout:   ""
+  action:   "run"
+  exitcode: 0
+  timeout:  60.0
 """
-
 
 import strformat
 import ../src/shene/mcall
@@ -52,20 +48,21 @@ proc newCat*(id, cid: int): Must[Animal[Cat], Cat] =
 
 
 var p = People[Cat](pet: newCat(id = 12, 13))
-echo p.pet.call(barkImpl, 13, 14)
+doAssert p.pet.call(barkImpl, 13, 14) == "a.cid + b + c = 40"
 p.pet.call(sleepImpl)
-echo p.pet.id
-echo p.pet.cid
+doAssert p.pet.id == 12
+doAssert p.pet.cid == 13
 
 var m = newCat(13, 14)
-echo m.call(barkImpl, 12, 87)
+doAssert m.call(barkImpl, 12, 87) == "a.cid + b + c = 113"
 # discard p.pet.barkImpl
 # echo p.pet.mget(barkImpl)
 
 
 type
   Dog = object
-    id: int
+    id: string
+    did: int
     name: string
 
   Monkey = object of Others[Monkey]
@@ -73,10 +70,11 @@ type
 
 
 proc bark(d: var Dog, b: int, c: int): string =
-  echo "Dog"
-  echo d.name
-  d.id = 777
-  echo d.id
+  doAssert d.name == "OK"
+  d.did = 777
+  doAssert d.did == 777
+  d.id = "First"
+  doAssert d.id == "First"
 
 proc clear(m: var Monkey) =
   m.id = 0
@@ -84,25 +82,29 @@ proc clear(m: var Monkey) =
 
 proc newDog(): Must[Animal[Dog], Dog] =
   result.name = "OK"
-  result.id = 12
+  result.did = 12
   result.barkImpl = bark
 
-
 proc newMonkey(): Must[Others[Monkey], Monkey] =
-  result.obj.id = 12
-  result.obj.mid = 777
+  result.id = 12
+  result.mid = 777
   result.clearImpl = clear
+  doAssert result.id == 12
+  doAssert result.mid == 777
 
 var monkey = newMonkey()
-monkey.obj.id = 999
+monkey.id = 999
+doAssert monkey.id == 999
 monkey.call(clearImpl)
+doAssert monkey.id == 0
+doAssert monkey.mid == 0
 
 
 var d = newDog()
-var p1 = People[Dog](pet: d)
+var p1 = People[Dog](pet: move(d))
 discard p1.pet.call(barkImpl, 13, 14)
 
 
 doAssertRaises(ImplError):
   p1.pet.call(sleepImpl)
-echo p1.pet.id
+doAssert p1.pet.did == 777

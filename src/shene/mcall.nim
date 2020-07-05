@@ -4,9 +4,9 @@ import macros
 type
   ImplError* = object of CatchableError
 
-  Must*[U; T: object | ref object] {.requiresInit.} = object 
-    class*: U
-    obj*: T
+  Must*[U; T: object | ref object] = object 
+    class: U
+    obj: T
 
 
 template get*(must: Must, attrs: untyped): untyped =
@@ -20,8 +20,10 @@ template `.`*(must: Must, attrs: untyped): untyped =
 
 template put*(must: var Must, call: untyped, fun: untyped) =
   when compiles(must.class.call) and compiles(must.obj.call):
-    must.class.call = fun
-    must.obj.call = fun
+    when (typeof(must.obj.call) is proc):
+      must.class.call = fun
+    else:
+      must.obj.call = fun
   elif compiles(must.class.call):
     must.class.call = fun
   else:
