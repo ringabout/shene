@@ -13,20 +13,19 @@ import ../src/shene/mcall
 
 
 type
-  Animal*[T] = object of RootObj
-    id: int
+  Animal*[T] = object
     sleepImpl: proc (a: T) {.nimcall, gcsafe.}
     barkImpl: proc (a: T, b: int, c: int): string {.nimcall, gcsafe.}
     danceImpl: proc (a: T, b: string): string {.nimcall, gcsafe.}
 
-  Gamer*[T] = object of RootObj
+  Gamer*[T] = object
     id: int
     sleepImpl: proc (a: T) {.nimcall, gcsafe.}
 
-  Cat* = object of Animal[Cat]
+  Cat* = object
     cid: int
 
-  Player* = object of Gamer[Player]
+  Player* = object
     pid: int
 
   People*[T, U] = object
@@ -42,7 +41,7 @@ proc bark*(a: Cat, b: int, c: int): string =
   result = fmt"{a.cid + b + c = }"
 
 proc dance*(a: Cat, b: string): string =
-  result = fmt"{a.id = } |-| {b = }"
+  result = fmt"{b = }"
 
 proc sleep*(a: Gamer) =
   echo "Hello, I am asleep."
@@ -50,27 +49,23 @@ proc sleep*(a: Gamer) =
 proc sleep*(a: Player) =
   discard
 
-proc newCat*(id, cid: int): must(Animal, Cat) =
-  result.id = id
+proc newCat*(cid: int): must(Animal, Cat) =
   result.cid = cid
   result.sleepImpl = sleep
   result.barkImpl = bark
   result.danceImpl = dance
 
-proc newPlayer*(id, pid: int): must(Gamer, Player) =
-  result.id = id
+proc newPlayer*(pid: int): must(Gamer, Player) =
   result.pid = pid
   result.sleepImpl = sleep
  
 
-let p = People[Cat, Player](id: 2333, pet: newCat(id = 12, 13),
-                            gamer: newPlayer(12, 34))
+let p = People[Cat, Player](id: 2333, pet: newCat(13),
+                            gamer: newPlayer(34))
 doAssert p.pet.call(barkImpl, 13, 14) == "a.cid + b + c = 40"
 p.pet.call(sleepImpl)
-doAssert p.pet.id == 12
 doAssert p.pet.cid == 13
 p.gamer.call(sleepImpl)
 doAssert p.gamer.pid == 34
-doAssert p.id == 2333
 # echo p.pet.barkImpl
 # echo p.pet.mget(barkImpl)

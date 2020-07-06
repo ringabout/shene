@@ -9,25 +9,16 @@ type
     data*: T
 
 
-
 template must*(a, b: typedesc): untyped =
   Must[a[b], b]
 
 template init*(must: Must) =
-  if must.data is ref object:
+  when must.data is ref object:
     if must.data == nil:
       new must.data
 
 template get*(must: Must, attrs: untyped): untyped =
-  const
-    cond1 = compiles(must.impl.attrs)
-    cond2 = compiles(must.data.attrs)
-  when cond1 and cond2:
-    when (typeof(must.data.attrs) is proc):
-      must.impl.attrs
-    else:
-      must.data.attrs
-  elif cond1:
+  when compiles(typeof(must.impl.attrs) is proc):
     must.impl.attrs
   else:
     must.data.attrs
@@ -36,15 +27,7 @@ template `.`*(must: Must, attrs: untyped): untyped =
   must.get(attrs)
 
 template put*(must: var Must, call: untyped, fun: untyped) =
-  const
-    cond1 = compiles(must.impl.call)
-    cond2 = compiles(must.data.call)
-  when cond1 and cond2:
-    when (typeof(must.data.call) is proc):
-      must.impl.call = fun
-    else:
-      must.data.call = fun
-  elif cond1:
+  when compiles(typeof(must.impl.call) is proc):
     must.impl.call = fun
   else:
     must.data.call = fun

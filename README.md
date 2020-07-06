@@ -36,6 +36,8 @@ type
 
 #### Data Class
 
+If class is ref object, user must `new Must.data` or `init Must`. 
+
 ```nim
 type
   Dog = object

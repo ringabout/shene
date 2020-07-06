@@ -14,12 +14,11 @@ import ../src/shene/mcall
 
 type
   Animal*[T] = object of RootObj
-    id: int
     sleepImpl: proc (a: T) {.nimcall, gcsafe.}
     barkImpl: proc (a: var T, b: int, c: int): string {.nimcall, gcsafe.}
     danceImpl: proc (a: T, b: string): string {.nimcall, gcsafe.}
 
-  Cat* = object of Animal[Cat]
+  Cat* = object
     cid: int
 
   Others*[T] = object of Animal[T]
@@ -37,23 +36,21 @@ proc bark*(a: var Cat, b: int, c: int): string =
   result = fmt"{a.cid + b + c = }"
 
 proc dance*(a: Cat, b: string): string =
-  result = fmt"{a.id = } |-| {b = }"
+  result = fmt"{b = }"
 
-proc newCat*(id, cid: int): must(Animal, Cat) =
-  result.id = id
+proc newCat*(cid: int): must(Animal, Cat) =
   result.cid = cid
   result.sleepImpl = sleep
   result.barkImpl = bark
   result.danceImpl = dance
 
 
-var p = People[Cat](pet: newCat(id = 12, 13))
+var p = People[Cat](pet: newCat(13))
 doAssert p.pet.call(barkImpl, 13, 14) == "a.cid + b + c = 40"
 p.pet.call(sleepImpl)
-doAssert p.pet.id == 12
 doAssert p.pet.cid == 13
 
-var m = newCat(13, 14)
+var m = newCat(14)
 doAssert m.call(barkImpl, 12, 87) == "a.cid + b + c = 113"
 # discard p.pet.barkImpl
 # echo p.pet.mget(barkImpl)
@@ -65,7 +62,7 @@ type
     did: int
     name: string
 
-  Monkey = object of Others[Monkey]
+  Monkey = object
     mid: int
 
 
@@ -77,7 +74,6 @@ proc bark(d: var Dog, b: int, c: int): string =
   doAssert d.id == "First"
 
 proc clear(m: var Monkey) =
-  m.id = 0
   m.mid = 0
 
 proc newDog(): must(Animal, Dog) =
@@ -87,26 +83,23 @@ proc newDog(): must(Animal, Dog) =
   result.barkImpl = bark
 
 proc newMonkey(): must(Others, Monkey) =
-  result.id = 12
   result.mid = 777
   result.clearImpl = clear
-  doAssert result.id == 12
   doAssert result.mid == 777
 
 var monkey = newMonkey()
-monkey.id = 999
-doAssert monkey.id == 999
 monkey.call(clearImpl)
-doAssert monkey.id == 0
 doAssert monkey.mid == 0
 
 
 var d = newDog()
+echo sizeof(Animal)
+echo sizeof(d)
 var p1 = People[Dog](pet: move(d))
 discard p1.pet.call(barkImpl, 13, 14)
 
 let x = p.pet.barkImpl
-var c = Cat(id: 99, cid: 2)
+var c = Cat(cid: 2)
 doAssert x(c, 12, 3) == "a.cid + b + c = 17"
 
 
