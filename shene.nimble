@@ -2,7 +2,7 @@
 
 version       = "0.1.0"
 author        = "flywind"
-description   = "Interface for Nim."
+description   = "Zero-cost interface for Nim."
 license       = "Apache-2.0"
 srcDir        = "src"
 
