@@ -60,7 +60,7 @@ doAssert m.call(barkImpl, 12, 87) == "a.cid + b + c = 113"
 
 
 type
-  Dog = object
+  Dog = ref object
     id: string
     did: int
     name: string
@@ -81,6 +81,7 @@ proc clear(m: var Monkey) =
   m.mid = 0
 
 proc newDog(): must(Animal, Dog) =
+  init result
   result.name = "OK"
   result.did = 12
   result.barkImpl = bark
