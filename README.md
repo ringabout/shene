@@ -1,5 +1,6 @@
 # shene
-Make an Interface using generics for Nim.
+
+Zero-cost interface for Nim.
 
 ## Installation
 
