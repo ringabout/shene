@@ -26,13 +26,13 @@ template get*(must: Must, attrs: untyped): untyped =
 template `.`*(must: Must, attrs: untyped): untyped =
   must.get(attrs)
 
-template put*(must: var Must, call: untyped, fun: untyped) =
+template put*(must: var Must, call: untyped, fun: typed) =
   when compiles(typeof(must.impl.call) is proc):
     must.impl.call = fun
   else:
     must.data.call = fun
 
-template `.=`*(must: var Must, call: untyped, fun: untyped) {.dirty.} =
+template `.=`*(must: var Must, call: untyped, fun: typed) =
   must.put(call, fun)
 
 macro call*(must: Must, call: untyped, params: varargs[untyped]): untyped =

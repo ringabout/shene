@@ -13,7 +13,7 @@ import ../src/shene/mcall
 
 
 type
-  Animal*[T] = object of RootObj
+  Animal*[T] = object
     id: int
     sleepImpl: proc (a: T) {.nimcall, gcsafe.}
     barkImpl: proc (a: T, b: int, c: int): string {.nimcall, gcsafe.}

@@ -93,10 +93,10 @@ doAssert monkey.mid == 0
 
 
 var d = newDog()
-echo sizeof(Animal)
-echo sizeof(d)
+doAssert sizeof(Animal) == 32
+doAssert sizeof(d) == 40
 var p1 = People[Dog](pet: move(d))
-discard p1.pet.call(barkImpl, 13, 14)
+discard p1.pet.call(barkImpl, b = 13, 14)
 
 let x = p.pet.barkImpl
 var c = Cat(cid: 2)
