@@ -98,6 +98,7 @@ doAssert sizeof(d) == 40
 var p1 = People[Dog](pet: move(d))
 discard p1.pet.call(barkImpl, b = 13, 14)
 
+
 let x = p.pet.barkImpl
 var c = Cat(cid: 2)
 doAssert x(c, 12, 3) == "a.cid + b + c = 17"

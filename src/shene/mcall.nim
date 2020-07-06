@@ -5,7 +5,7 @@ type
   ImplError* = object of CatchableError
 
   Must*[U: object; T: object | ref object] = object 
-    impl: U
+    impl*: U
     data*: T
 
 

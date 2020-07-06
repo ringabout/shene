@@ -16,9 +16,9 @@ nimble install shene
 
 ```nim
 type
-  Must*[U; T: object | ref object] = object 
-    impl: U
-    data: T
+  Must*[U: object; T: object | ref object] = object 
+    impl*: U
+    data*: T
 ```
 
 
