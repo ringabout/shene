@@ -59,13 +59,13 @@ proc newPlayer*(pid: int): must(Gamer, Player) =
   result.pid = pid
   result.sleepImpl = sleep
  
-
-let p = People[Cat, Player](id: 2333, pet: newCat(13),
-                            gamer: newPlayer(34))
-doAssert p.pet.call(barkImpl, 13, 14) == "a.cid + b + c = 40"
-p.pet.call(sleepImpl)
-doAssert p.pet.cid == 13
-p.gamer.call(sleepImpl)
-doAssert p.gamer.pid == 34
-# echo p.pet.barkImpl
-# echo p.pet.mget(barkImpl)
+static:
+  let p = People[Cat, Player](id: 2333, pet: newCat(13),
+                              gamer: newPlayer(34))
+  doAssert p.pet.call(barkImpl, 13, 14) == "a.cid + b + c = 40"
+  p.pet.call(sleepImpl)
+  doAssert p.pet.cid == 13
+  p.gamer.call(sleepImpl)
+  doAssert p.gamer.pid == 34
+  # echo p.pet.barkImpl
+  # echo p.pet.mget(barkImpl)
