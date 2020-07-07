@@ -18,6 +18,13 @@ type
     barkImpl: proc (a: var T, b: int, c: int): string {.nimcall, gcsafe.}
     danceImpl: proc (a: T, b: string): string {.nimcall, gcsafe.}
 
+  Pet*[T] = object
+    okImpl: proc(a: T) {.nimcall, gcsafe.}
+
+  Bird*[T] = object
+    a: Animal[T]
+    b: Pet[T]
+
   Cat* = object
     cid: int
 
@@ -27,6 +34,8 @@ type
   People*[T] = object
     pet: must(Animal, T)
     other: must(Others, T)
+    bird: must(Bird, T)
+
 
 
 proc sleep*(a: Cat) =
@@ -92,10 +101,14 @@ monkey.call(clearImpl)
 doAssert monkey.mid == 0
 
 
+proc newPeople(pet: must(Animal, Dog)): People[Dog] =
+  result.pet = pet
+
+
 var d = newDog()
 doAssert sizeof(Animal) == 32
 doAssert sizeof(d) == 40
-var p1 = People[Dog](pet: move(d))
+var p1 = newPeople(pet = d)
 discard p1.pet.call(barkImpl, b = 13, 14)
 
 
