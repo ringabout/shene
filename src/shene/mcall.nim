@@ -4,12 +4,12 @@ import macros
 type
   ImplError* = object of CatchableError
 
-  Must*[U: object; T: object | ref object] = object 
+  Must*[U; T: object | ref object] = object 
     impl*: U
     data*: T
 
 
-template must*(a, b: typedesc): untyped =
+template must*(a, b: typed): untyped =
   Must[a[b], b]
 
 template init*(must: Must) =

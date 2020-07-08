@@ -19,7 +19,6 @@ type
     danceImpl: proc (a: T, b: string): string {.nimcall, gcsafe.}
 
   Gamer*[T] = object
-    id: int
     sleepImpl: proc (a: T) {.nimcall, gcsafe.}
 
   Cat* = object
